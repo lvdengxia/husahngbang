@@ -31,6 +31,7 @@ dependencies:
   dio:
   provider:
   shared_preferences:
+  weui:
 
 dev_dependencies:
   flutter_test:

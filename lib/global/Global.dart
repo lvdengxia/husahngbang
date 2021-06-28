@@ -24,21 +24,17 @@ class Global {
       }
     );
 
-    dio.interceptors.add(
-      InterceptorsWrapper(
-          onRequest: (options, handle){
-            print(options);
-            print(handle);
-          },
-          onResponse: (response, handle){
-            print( response );
-            print( handle );
-          },
-          onError: (error, handle){
-            print(error);
-            print(handle);
-          },
-      )
-    );
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        return handler.next(options);
+      },
+      onResponse: (response, handler) {
+        return handler.next(response);
+      },
+      onError: (DioError error, handler) {
+        return handler.resolve(Response(requestOptions:error.requestOptions,data:error.response?.statusCode.toString()));
+
+      },
+    ));
   }
 }
