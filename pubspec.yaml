@@ -32,6 +32,9 @@ dependencies:
   provider:
   shared_preferences:
   weui:
+  permission_handler:
+  event_bus:
+  amap_base:
 
 dev_dependencies:
   flutter_test:
