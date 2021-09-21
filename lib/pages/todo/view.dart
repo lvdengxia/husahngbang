@@ -1,0 +1,178 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:get/get.dart';
+import 'package:hushangbang/components/EmptyData.dart';
+import 'package:hushangbang/components/task_card/view.dart';
+
+import 'logic.dart';
+import 'state.dart';
+
+class TodoPage extends StatelessWidget {
+  final TodoLogic logic = Get.put(TodoLogic());
+  final TodoState state = Get.find<TodoLogic>().state;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            appBar: AppBar(
+              title: TabBar(
+                indicatorColor: Colors.transparent,
+                labelColor: Colors.white,
+                labelStyle:
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                unselectedLabelColor: Colors.black38,
+                unselectedLabelStyle:
+                    TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                tabs: [
+                  Tab(text: '今日待配送'),
+                  Tab(text: '全部待派送')
+                ],
+              ),
+            ),
+            body: TabBarView(children: [
+              Container(
+                color: Color(0xfff4f5f5),
+                child: EasyRefresh(
+                  // 是否开启控制结束加载
+                  enableControlFinishLoad: false,
+                  controller: state.todayController,
+                  header: ClassicalHeader(
+                    bgColor: Colors.white,
+                    infoColor: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).primaryColor,
+                    refreshText: '下拉刷新',
+                    refreshReadyText: '松开刷新',
+                    refreshingText: '加载中...',
+                    refreshedText: '加载完成',
+                    refreshFailedText: '加载失败',
+                    showInfo: true,
+                    infoText: '更新时间: %T',
+                  ),
+                  footer: ClassicalFooter(
+                    bgColor: Colors.white,
+                    //  更多信息文字颜色
+                    infoColor: Theme.of(context).primaryColor,
+                    // 字体颜色
+                    textColor: Theme.of(context).primaryColor,
+                    // 加载失败时显示的文字
+                    loadText: '加载失败',
+                    // 没有更多时显示的文字
+                    noMoreText: '没有更多了',
+                    // 是否显示提示信息
+                    showInfo: false,
+                    // 正在加载时的文字
+                    loadingText: '加载中...',
+                    // 准备加载时显示的文字
+                    loadReadyText: '松开加载更多',
+                    // 加载完成显示的文字
+                    loadedText: '加载完成',
+                  ),
+                  child: Container(
+                    child: GetBuilder<TodoLogic>(
+                      builder: (logic) {
+                        return state.todayEmpty
+                            ? EmptyData()
+                            : Column(
+                          children: state.todayCardData.map((element) {
+                            return TaskCard(item: element);
+                          }).toList(),
+                        );
+                      },
+                    ),
+                  ),
+                  // 下拉刷新事件回调
+                  onRefresh: () async {
+                    await Future.delayed(Duration(seconds: 1), () {
+                      // 事件处理
+                      logic.refreshToDayData();
+                      // 重置刷新状态 【没错，这里用的是resetLoadState】
+                      state.todayController.resetLoadState();
+                    });
+                  },
+                  // 上拉加载事件回调
+                  onLoad: () async {
+                    await Future.delayed(Duration(seconds: 2), () {
+                      // 加载数据
+                      logic.loadToDayData();
+                      // 结束加载
+                      state.todayController.finishLoad();
+                    });
+                  },
+                ),
+              ),
+
+              Container(
+                color: Color(0xfff4f5f5),
+                child: EasyRefresh(
+                  // 是否开启控制结束加载
+                  enableControlFinishLoad: false,
+                  controller: state.allController,
+                  header: ClassicalHeader(
+                    bgColor: Colors.white,
+                    infoColor: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).primaryColor,
+                    refreshText: '下拉刷新',
+                    refreshReadyText: '松开刷新',
+                    refreshingText: '加载中...',
+                    refreshedText: '加载完成',
+                    refreshFailedText: '加载失败',
+                    showInfo: true,
+                    infoText: '更新时间: %T',
+                  ),
+                  footer: ClassicalFooter(
+                    bgColor: Colors.white,
+                    //  更多信息文字颜色
+                    infoColor: Theme.of(context).primaryColor,
+                    // 字体颜色
+                    textColor: Theme.of(context).primaryColor,
+                    // 加载失败时显示的文字
+                    loadText: '加载失败',
+                    // 没有更多时显示的文字
+                    noMoreText: '没有更多了',
+                    // 是否显示提示信息
+                    showInfo: false,
+                    // 正在加载时的文字
+                    loadingText: '加载中...',
+                    // 准备加载时显示的文字
+                    loadReadyText: '松开加载更多',
+                    // 加载完成显示的文字
+                    loadedText: '加载完成',
+                  ),
+                  child: Container(
+                    child: GetBuilder<TodoLogic>(
+                      builder: (logic) {
+                        return state.allDayEmpty
+                            ? EmptyData()
+                            : Column(
+                          children: state.allDayCardData.map((element) {
+                            return TaskCard(item: element);
+                          }).toList(),
+                        );
+                      },
+                    ),
+                  ),
+                  // 下拉刷新事件回调
+                  onRefresh: () async {
+                    await Future.delayed(Duration(seconds: 1), () {
+                      // 事件处理
+                      logic.refreshToDayData();
+                      // 重置刷新状态 【没错，这里用的是resetLoadState】
+                      state.allController.resetLoadState();
+                    });
+                  },
+                  // 上拉加载事件回调
+                  onLoad: () async {
+                    await Future.delayed(Duration(seconds: 2), () {
+                      // 加载数据
+                      logic.loadAllDayData();
+                      // 结束加载
+                      state.allController.finishLoad();
+                    });
+                  },
+                ),
+              )
+            ])));
+  }
+}
