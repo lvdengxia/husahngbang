@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hushangbang/api/api.dart';
 import 'package:hushangbang/models/Upload.dart';
+import 'package:hushangbang/pages/todo/logic.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'state.dart';
@@ -35,6 +36,9 @@ class LoadedLogic extends GetxController {
 
   submit() async {
     var res = await ApiService.receiveOrder(state.orderSn,3,img: state.imgUrl);
+
+    TodoLogic logic = Get.put(TodoLogic());
+    await logic.refreshToDayData();
 
     if(res['code'] == 200){
       Get.back();

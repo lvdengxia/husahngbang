@@ -15,7 +15,6 @@ class DetailLogic extends GetxController {
     if(res['code'] == 200) {
       /// 组装商品数据
       if(res['data']['storey_amount_details'].length != 0){
-        print('1');
         state.tableRowList = tableRow(res['data']['storey_amount_details']);
       }
 

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:hushangbang/api/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,13 +42,26 @@ class Global {
 
         return handler.next(options);
       },
-      onResponse: (response, handler) {
+      onResponse: (response, handler)  async {
+        if(response.statusCode == 401){
+          /// 服务端有bug 自动登录
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String account = prefs.getString('account') ?? '';
+          String pwd = prefs.getString('pwd') ?? '';
+          var login = await ApiService.sendLoginData(account,pwd);
+          if(login['code'].toString() == '200'){
+            prefs.remove('token'); //删除再更新 避免缓存
+            prefs.setString('token',login['data']['token']);
+          }else{
+            Get.defaultDialog(title: '提示', middleText: '账号异常，请重新登录！');
+          }
+        }
         return handler.next(response);
       },
       onError: (DioError error, handler) {
-        return handler.resolve(Response(
-            requestOptions: error.requestOptions,
-            data: error.response?.statusCode.toString()));
+        // return handler.resolve(Response(
+        //     requestOptions: error.requestOptions,
+        //     data: error.response?.statusCode.toString()));
       },
     ));
   }

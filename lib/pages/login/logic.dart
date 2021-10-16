@@ -28,6 +28,8 @@ class LoginLogic extends GetxController {
       /// 保存登录状态
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token',login['data']['token']);
+      prefs.setString('account',state.unameController.text);
+      prefs.setString('pwd',state.pwdController.text);
       Get.offNamed('/');
     }else{
       Get.defaultDialog(title: login['msg'],middleText:'这里写文字或者定义Icon');

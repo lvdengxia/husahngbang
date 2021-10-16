@@ -1,7 +1,5 @@
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hushangbang/api/api.dart';
-import 'package:flutter/material.dart';
 import 'dart:convert' show json;
 
 import 'state.dart';
@@ -18,21 +16,17 @@ class AllTaskLogic extends GetxController {
   getData() async {
     var data = await ApiService.getOrderList();
 
-    // /// 模拟数据
-    // var data;
-    // await rootBundle.loadString('asset/OrderList.json').then((value) {
-    //   data = json.decode(value.toString());
-    // });
-
     if (data['code'] == 200) {
       if (!data['data']['list'].isEmpty) {
-        state.isEmpty = false;
         List arr = [];
         for (var i = 0; i < data['data']['list'].length; i++) {
-          arr.add(data['data']['list'][i]);
+          if( data['data']['list'][i]['status'] == 202 && data['data']['list'][i]['distribution_status'] == 1){
+             arr.add(data['data']['list'][i]);
+          }
         }
         state.cardData = arr;
         state.size = state.cardData.length;
+        if(state.size > 0)  state.isEmpty = false;
         update();
       }
     }
@@ -41,15 +35,11 @@ class AllTaskLogic extends GetxController {
   onLoadMore() async {
     var data = await ApiService.getOrderList(page: state.page + 1);
 
-    /// 模拟数据
-    // var data;
-    // await rootBundle.loadString('asset/OrderList.json').then((value) {
-    //   data = json.decode(value.toString());
-    // });
-
     if (data['code'] == 200 && !data['data']['list'].isEmpty) {
       for (var i = 0; i < data['data']['list'].length; i++) {
-        state.cardData.add(data['data']['list'][i]);
+        if( data['data']['list'][i]['status'] == 201 && data['data']['list'][i]['distribution_status'] == 1){
+          state.cardData.add(data['data']['list'][i]);
+        }
       }
       state.size = state.cardData.length;
       state.page += 1;

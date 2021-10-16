@@ -7,22 +7,12 @@ import 'state.dart';
 
 class PersonPage extends StatelessWidget {
   final PersonLogic logic = Get.put(PersonLogic());
-  final PersonState state = Get.find<PersonLogic>().state;
+  final PersonState state = Get
+      .find<PersonLogic>()
+      .state;
 
   @override
   Widget build(BuildContext context) {
-    // return Center(
-    //   child: ElevatedButton(
-    //     child: Text('退出登录'),
-    //     onPressed: () async {
-    //       SharedPreferences prefs = await SharedPreferences.getInstance();
-    //       prefs.remove('token'); //删除指定键
-    //       prefs.clear();//清空键值对
-    //       Get.offAllNamed('/login');
-    //     },
-    //   ),
-    // );
-
     return Scaffold(
       backgroundColor: Color(0xfff4f5f5),
       appBar: AppBar(
@@ -66,22 +56,29 @@ class PersonPage extends StatelessWidget {
                                 left: 30.0,
                                 bottom: 15.0,
                               ),
-                              child: new Text(
-                                '阿萨德',
-                                style: new TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 35.0),
+                              child: GetBuilder<PersonLogic>(
+                                builder: (logic) {
+                                  return Text(state.name,
+                                    style: new TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 35.0),
+                                  );
+                                },
                               ),
                             ),
                             new Padding(
                               padding: const EdgeInsets.only(
                                 left: 30.0,
                               ),
-                              child: new Text(
-                                '京A 88888',
-                                style: new TextStyle(
-                                    color: Colors.white, fontSize: 15.0),
+                              child: GetBuilder<PersonLogic>(
+                                builder: (logic) {
+                                  return Text(
+                                    state.plateNumber,
+                                    style: new TextStyle(
+                                        color: Colors.white, fontSize: 15.0),
+                                  );
+                                },
                               ),
                             ),
                           ],
@@ -96,8 +93,7 @@ class PersonPage extends StatelessWidget {
                           ),
                           child: new CircleAvatar(
                             radius: 35.0,
-                            backgroundImage: new NetworkImage(
-                                'https://avatars2.githubusercontent.com/u/20411648?s=460&v=4'),
+                            backgroundImage: new ExactAssetImage('asset/images/default.png'),
                           ),
                         ),
                       )
@@ -115,20 +111,30 @@ class PersonPage extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       new MenuItem(
-                        icon: Icons.face,
-                        title: '体验新版本',
+                        icon: Icons.reorder,
+                        title: '历史订单',
                         onPressed: () {
-                          print("体验新版本  ----   >");
+                          Get.toNamed('history');
                         },
                       ),
                       new MenuItem(
-                        icon: Icons.print,
-                        title: '个人信息',
+                        icon: Icons.face,
+                        title: '体验新版本',
+                        onPressed: () {
+                          Get.defaultDialog(title: '提示',middleText:'当前已经是最新版本了!');
+                        },
                       ),
-                      new MenuItem(
-                        icon: Icons.security,
-                        title: '隐私设置',
-                      ),
+                      // new MenuItem(
+                      //   icon: Icons.print,
+                      //   title: '个人信息',
+                      //   onPressed: () {
+                      //     Get.defaultDialog(title: '个人信息',middleText:'不知道这里要怎么显示哦!');
+                      //   },
+                      // ),
+                      // new MenuItem(
+                      //   icon: Icons.security,
+                      //   title: '隐私设置',
+                      // ),
                       new MenuItem(
                         icon: Icons.title,
                         title: '修改密码',
@@ -139,9 +145,9 @@ class PersonPage extends StatelessWidget {
                       new MenuItem(
                         icon: Icons.archive,
                         title: '退出登录',
-                        onPressed: () async{
+                        onPressed: () async {
                           SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
+                          await SharedPreferences.getInstance();
                           prefs.remove('token'); //删除指定键
                           prefs.clear(); //清空键值对
                           Get.offAllNamed('/login');
@@ -193,9 +199,10 @@ class MenuItem extends StatelessWidget {
                   ),
                   new Expanded(
                       child: new Text(
-                    title.toString(),
-                    style: new TextStyle(color: Colors.black54, fontSize: 16.0),
-                  )),
+                        title.toString(),
+                        style: new TextStyle(
+                            color: Colors.black54, fontSize: 16.0),
+                      )),
                   new Icon(
                     Icons.chevron_right,
                     color: Colors.grey,

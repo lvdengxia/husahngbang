@@ -6,6 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'state.dart';
 import 'dart:async';
 import 'package:amap_flutter_base/amap_flutter_base.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:math';
 
 class MapLogic extends GetxController {
   final state = MapState();
@@ -15,15 +17,23 @@ class MapLogic extends GetxController {
     super.onInit();
 
     ///获取参数
-    state.orderSn = Get.arguments;
+    state.orderSn = Get.arguments['orderSn'];
+    state.latitude = Get.arguments['latitude'];
+    state.longitude = Get.arguments['longitude'];
 
-    ///
     requestPermission();
 
     /// 获取轨迹 && 画线
-    await this.getDriverAndDraw();
+    // await this.getDriverAndDraw();
+    draw();
 
     update();
+  }
+
+  draw(){
+    LatLng end =  LatLng(double.parse(state.latitude),double.parse(state.longitude));
+    Marker marker = Marker(position: end);
+    state.markers[marker.id] = marker;
   }
 
   getDriverAndDraw() async {
@@ -58,8 +68,8 @@ class MapLogic extends GetxController {
       approvalNumberWidget.add(Text(satelliteImageApprovalNumber));
     }
 
-    print('地图审图号（普通地图）: $mapContentApprovalNumber');
-    print('地图审图号（卫星地图): $satelliteImageApprovalNumber');
+    // print('地图审图号（普通地图）: $mapContentApprovalNumber');
+    // print('地图审图号（卫星地图): $satelliteImageApprovalNumber');
   }
 
 
@@ -129,6 +139,74 @@ class MapLogic extends GetxController {
       }
     }
   }
+
+
+  /// 高德地图导航
+  Future<bool> gotoAMap() async{
+    var url = 'androidamap://navi?sourceApplication=amap&lat=${state.longitude}&lon=${state.latitude}&dev=0&style=2';
+
+    var res = await gotoMap(url: url);
+    if(!res){
+      Get.defaultDialog(title: '未安装高德地图',middleText:'无法跳转到高德地图！');
+      return false;
+    }
+    return true;
+  }
+
+  /// 百度地图导航
+  Future<bool> gotoBMap() async {
+    var bmapLocation = amapLocation2Bmap(state.latitude,state.longitude);
+    var url ='baidumap://map/direction?destination=${bmapLocation[0]},${bmapLocation[1]}&coord_type=gcj02&mode=driving';
+
+    var res = await gotoMap(url: url);
+    if(!res){
+      Get.defaultDialog(title: '未安装百度地图',middleText:'无法跳转到百度地图！');
+      return false;
+    }
+    return true;
+  }
+
+
+  Future<bool> gotoMap({String url = ''}) async {
+    bool canLaunchUrl = await isMapInstall(url);
+
+    if (!canLaunchUrl)  return false;
+
+    await launch(url);
+
+    return true;
+  }
+
+  /// 判断地图是否有安装
+  static Future<bool> isMapInstall(String url) {
+    return canLaunch(url);
+  }
+
+  ///GPS坐标转百度地图坐标（传入经度、纬度）
+  amapLocation2Bmap(latitude,longitude){
+      var X_PI = pi * 3000.0 / 180.0;
+      var x = double.parse(longitude);
+      var y = double.parse(latitude);
+      var z = sqrt(x * x + y * y) + 0.00002 * sin(y * X_PI);
+      var theta = atan2(y, x) + 0.000003 * cos(x * X_PI);
+      var bdLng = z * cos(theta) + 0.0065;
+      var bdLat = z * sin(theta) + 0.006;
+      return [bdLng,bdLat];
+  }
+
+
+  // function gps_bgps(gg_lng, gg_lat) {
+  //   var X_PI = Math.PI * 3000.0 / 180.0;
+  //   var x = gg_lng, y = gg_lat;
+  //   var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * X_PI);
+  //   var theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * X_PI);
+  //   var bd_lng = z * Math.cos(theta) + 0.0065;
+  //   var bd_lat = z * Math.sin(theta) + 0.006;
+  //   return {
+  //     bd_lat: bd_lat,
+  //     bd_lng: bd_lng
+  //   };
+  // }
 
 // @override
 // void onInit() {

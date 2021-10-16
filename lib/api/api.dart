@@ -33,6 +33,13 @@ class ApiService {
     return json.decode(response.data.toString());
   }
 
+  /// 获取司机基本信息
+  static Future getDriverBaseInfo() async {
+    Response response = await Global.getInstance().dio.get('/User/getUserInfo');
+
+    return json.decode(response.data.toString());
+  }
+
   /// 订单列表
   static Future getOrderList({int type = 0, int page = 1}) async {
     Response response = await Global.getInstance()

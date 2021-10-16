@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hushangbang/api/api.dart';
 import 'state.dart';
@@ -13,27 +11,25 @@ class TodoLogic extends GetxController {
   void onInit() async {
     super.onInit();
     this.refreshToDayData();
-    this.refreshAllDayData();
+    // this.refreshAllDayData();
   }
 
   refreshToDayData() async {
-    var data = await ApiService.getOrderList();
-
-    // /// 模拟数据
-    // var data;
-    // await rootBundle.loadString('asset/OrderList.json').then((value) {
-    //   data = json.decode(value.toString());
-    // });
+    var data = await ApiService.getOrderList(type: 1);
 
     if (data['code'] == 200) {
       if (!data['data']['list'].isEmpty) {
-        state.todayEmpty = false;
         List arr = [];
         for (var i = 0; i < data['data']['list'].length; i++) {
-          arr.add(data['data']['list'][i]);
+          if (data['data']['list'][i]['status'] == 202 &&
+              data['data']['list'][i]['distribution_status'] == 2) {
+            arr.add(data['data']['list'][i]);
+          }
         }
         state.todayCardData = arr;
         state.todaySize = state.todayCardData.length;
+
+        if(state.todaySize > 0)  state.todayEmpty = false;
         update();
       }
     }
@@ -63,11 +59,14 @@ class TodoLogic extends GetxController {
   }
 
   loadToDayData() async {
-    var data = await ApiService.getOrderList(page: state.todayPage + 1);
+    var data = await ApiService.getOrderList(type:1,page: state.todayPage + 1);
 
     if (data['code'] == 200 && !data['data']['list'].isEmpty) {
       for (var i = 0; i < data['data']['list'].length; i++) {
-        state.todayCardData.add(data['data']['list'][i]);
+        if (data['data']['list'][i]['status'] == 202 &&
+            data['data']['list'][i]['distribution_status'] == 2) {
+          state.todayCardData.add(data['data']['list'][i]);
+        }
       }
       state.todaySize = state.todayCardData.length;
       state.todayPage += 1;
@@ -91,7 +90,7 @@ class TodoLogic extends GetxController {
   @override
   void dispose() {
     super.dispose();
-    state.allController.dispose();
+    // state.allController.dispose();
     state.todayController.dispose();
   }
 }

@@ -28,14 +28,17 @@ class MapPage extends StatelessWidget {
                 builder: (logic) {
                   return AMapWidget(
                       /// 是否显示底层文字
-                      labelsEnabled: false,
+                      labelsEnabled: true,
                       onMapCreated: logic.onMapCreated,
                       // 定位小蓝点配置
-                      // myLocationStyleOptions: MyLocationStyleOptions(true),
+                      myLocationStyleOptions: MyLocationStyleOptions(true),
                       // 是否指南针
                       compassEnabled: true,
                       /// 绘制折线
-                      polylines: Set<Polyline>.of(state.polyLines.values));
+                      // polylines: Set<Polyline>.of(state.polyLines.values));
+                      ///绘制点标记
+                      markers: Set<Marker>.of(state.markers.values));
+
                 },
               ),
             ),
@@ -47,156 +50,47 @@ class MapPage extends StatelessWidget {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: logic.approvalNumberWidget),
+                )),
+            Positioned(
+                right: 10,
+                bottom: 60,
+                child: Container(
+                  width: 50 * 3,
+                  height: 50,
+                  margin: EdgeInsets.only(right: 10, left: 10),
+                  child: ElevatedButton(
+                    child: Text('开始导航',style: TextStyle(fontSize: 18),),
+                    onPressed: (){
+                      Get.bottomSheet(
+                        Container(
+                          color: Colors.white,
+                          child: Wrap(
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.map),
+                                title: Text("高德地图"),
+                                onTap: () {
+                                  logic.gotoAMap();
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.map),
+                                title: Text("百度地图"),
+                                onTap: () {
+                                  logic.gotoBMap();
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                        isDismissible: true,
+                      );
+                    },
+                  ),
                 ))
           ],
         ),
       ),
     );
   }
-
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     appBar: AppBar(
-//       title: Text('地图页'),
-//     ),
-//     body: Column(
-//       children: [
-//         new Container(
-//             alignment: Alignment.center,
-//             child: new Row(
-//               mainAxisSize: MainAxisSize.min,
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: <Widget>[
-//                 new ElevatedButton(
-//                   onPressed: () => logic.startLocation(),
-//                   child: new Text('开始定位'),
-//                   style: ButtonStyle(
-//                     backgroundColor: MaterialStateProperty.all(Colors.blue),
-//                     foregroundColor: MaterialStateProperty.all(Colors.white),
-//                   ),
-//                 ),
-//                 new Container(width: 20.0),
-//                 new ElevatedButton(
-//                   onPressed: () => logic.stopLocation(),
-//                   child: new Text('停止定位'),
-//                   style: ButtonStyle(
-//                     backgroundColor: MaterialStateProperty.all(Colors.blue),
-//                     foregroundColor: MaterialStateProperty.all(Colors.white),
-//                   ),
-//                 )
-//               ],
-//             )),
-//         GetBuilder<MapLogic>(builder: (logic) {
-//           List<Widget> widgets = <Widget>[];
-//           logic.locationResult?.forEach((key, value) {
-//             widgets.add(_resultWidget(key, value));
-//           });
-//           return Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             mainAxisSize: MainAxisSize.min,
-//             children: widgets,
-//           );
-//         }),
-//       ],
-//     ),
-//   );
-// }
-
-// Widget _resultWidget(key, value) {
-//   return new Container(
-//     child: new Row(
-//       mainAxisSize: MainAxisSize.min,
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: <Widget>[
-//         new Container(
-//           alignment: Alignment.centerRight,
-//           width: 100.0,
-//           child: new Text('$key :'),
-//         ),
-//         new Container(width: 5.0),
-//         new Flexible(child: new Text('$value', softWrap: true)),
-//       ],
-//     ),
-//   );
-// }
 }
-
-//
-// class _ShowMapPageBody extends StatefulWidget {
-//   @override
-//   State<StatefulWidget> createState() => _ShowMapPageState();
-// }
-//
-// class _ShowMapPageState extends State<_ShowMapPageBody> {
-//   List<Widget> _approvalNumberWidget = [];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final AMapWidget map = AMapWidget(
-//       /// 是否显示底层文字
-//       // labelsEnabled:false,
-//       onMapCreated: onMapCreated,
-//       // 定位小蓝点配置
-//       myLocationStyleOptions: MyLocationStyleOptions(true),
-//       // 是否指南针
-//       // compassEnabled: true,
-//       /// 绘制折线
-//       // polylines:Set<Polyline>.of(polylines.values)
-//
-//     );
-//
-//     return ConstrainedBox(
-//       constraints: BoxConstraints.expand(),
-//       child: Stack(
-//         alignment: Alignment.center,
-//         children: [
-//           Container(
-//             height: MediaQuery.of(context).size.height,
-//             width: MediaQuery.of(context).size.width,
-//             child: map,
-//           ),
-//           Positioned(
-//               right: 10,
-//               bottom: 15,
-//               child: Container(
-//                 alignment: Alignment.centerLeft,
-//                 child: Column(
-//                     mainAxisAlignment: MainAxisAlignment.start,
-//                     children: _approvalNumberWidget),
-//               ))
-//         ],
-//       ),
-//     );
-//   }
-//
-//   AMapController? _mapController;
-//
-//   void onMapCreated(AMapController controller) {
-//     setState(() {
-//       _mapController = controller;
-//       getApprovalNumber();
-//     });
-//   }
-//
-//   /// 获取审图号
-//   void getApprovalNumber() async {
-//     //普通地图审图号
-//     String? mapContentApprovalNumber =
-//     await _mapController?.getMapContentApprovalNumber();
-//     //卫星地图审图号
-//     String? satelliteImageApprovalNumber =
-//     await _mapController?.getSatelliteImageApprovalNumber();
-//     setState(() {
-//       if (null != mapContentApprovalNumber) {
-//         _approvalNumberWidget.add(Text(mapContentApprovalNumber));
-//       }
-//       if (null != satelliteImageApprovalNumber) {
-//         _approvalNumberWidget.add(Text(satelliteImageApprovalNumber));
-//       }
-//     });
-//     print('地图审图号（普通地图）: $mapContentApprovalNumber');
-//     print('地图审图号（卫星地图): $satelliteImageApprovalNumber');
-//   }
-//
-// }

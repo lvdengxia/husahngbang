@@ -9,8 +9,9 @@ class TaskCard extends StatelessWidget {
   final TaskCardState state = Get.find<TaskCardLogic>().state;
   final width = window.physicalSize.width;
   final item;
+  final isShowMapWidget;
 
-  TaskCard({this.item});
+  TaskCard({this.item, this.isShowMapWidget = true});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +100,7 @@ class TaskCard extends StatelessWidget {
                         Text(item['mobile']),
                       ],
                     ),
-                    Row(
+                    isShowMapWidget ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('地址 ：'),
@@ -113,8 +114,9 @@ class TaskCard extends StatelessWidget {
                         Expanded(
                             child: GestureDetector(
                               onTap: (){
-                                logic.goMapPage(item['order_sn']);
-                              },
+                                logic.goMapPage(item['order_sn'],
+                                item['location'][0], item['location'][1]);
+                          },
                               child: Text(
                           item['province']+item['city']+item['district']+item['address'],
                           overflow: TextOverflow.ellipsis,
@@ -122,7 +124,7 @@ class TaskCard extends StatelessWidget {
                             )),
                         Icon(Icons.keyboard_arrow_right,color: Colors.red,)
                       ],
-                    ),
+                    ) : Container(),
                   ],
                 ),
               ),

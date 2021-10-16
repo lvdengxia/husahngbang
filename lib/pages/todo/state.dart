@@ -4,7 +4,7 @@ class TodoState {
 
   late EasyRefreshController todayController;
 
-  late EasyRefreshController allController;
+  // late EasyRefreshController allController;
 
   List todayCardData = [];
   List allDayCardData = [];
@@ -26,6 +26,6 @@ class TodoState {
 
     todayController = new EasyRefreshController();
 
-    allController = new EasyRefreshController();
+    // allController = new EasyRefreshController();
   }
 }
