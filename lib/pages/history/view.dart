@@ -63,7 +63,7 @@ class HistoryPage extends StatelessWidget {
                       ? EmptyData()
                       : Column(
                     children: state.historyCardData.map((element) {
-                      return TaskCard(item: element,isShowMapWidget: false);
+                      return TaskCard(item: element,isShowMapWidget: true);
                     }).toList(),
                   );
                 },

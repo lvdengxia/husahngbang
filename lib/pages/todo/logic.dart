@@ -22,7 +22,11 @@ class TodoLogic extends GetxController {
         List arr = [];
         for (var i = 0; i < data['data']['list'].length; i++) {
           if (data['data']['list'][i]['status'] == 202 &&
-              data['data']['list'][i]['distribution_status'] == 2) {
+                  data['data']['list'][i]['distribution_status'] == 2 ||
+              data['data']['list'][i]['status'] == 202 &&
+                  data['data']['list'][i]['distribution_status'] == 3 ||
+              data['data']['list'][i]['status'] == 202 &&
+                  data['data']['list'][i]['distribution_status'] == 4) {
             arr.add(data['data']['list'][i]);
           }
         }

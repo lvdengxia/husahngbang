@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hushangbang/api/api.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'state.dart';
 import 'dart:async';
 import 'package:amap_flutter_base/amap_flutter_base.dart';
@@ -23,24 +24,57 @@ class MapLogic extends GetxController {
 
     requestPermission();
 
-    /// 获取轨迹 && 画线
-    // await this.getDriverAndDraw();
-    draw();
+    // await this.getDriverAndDraw();/// 获取轨迹 && 画线
+    // draw();  /// 画点标记
+
+    /// 获取路径规划 && 画线
+    await getPathAndDraw();
 
     update();
   }
 
-  draw(){
-    LatLng end =  LatLng(double.parse(state.latitude),double.parse(state.longitude));
+  /// 画点标记
+  draw() {
+    LatLng end =
+        LatLng(double.parse(state.latitude), double.parse(state.longitude));
     Marker marker = Marker(position: end);
     state.markers[marker.id] = marker;
   }
 
+  /// 获取轨迹 && 画线
   getDriverAndDraw() async {
     var res = await ApiService.getTrackByOrderSn(state.orderSn);
-    if(res['code'] == 200){
+    if (res['code'] == 200) {
       this.add(res['data']['res']);
     }
+  }
+
+  /// 获取路径规划 && 画线
+  getPathAndDraw() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String myLocation = prefs.getString('myLocation').toString();
+    if(myLocation.length < 14) myLocation = '116.277612,39.931251'; ///避免崩溃,设置默认值
+    var res = await ApiService.getPathByOrderSn(state.orderSn, myLocation);
+
+    var steps = res['data']['route']['paths'][0]['steps'];
+    String polylines = '';
+    for (var i = 0; i < steps.length; i++) {
+      polylines += steps[i]['polyline'] + ';';
+    }
+
+    List polyArray = polylines.split(';');
+    List polyArr = [];
+    polyArray.forEach((element) {
+      if (element != '') {
+        List temp = element.split(',');
+        polyArr.add({
+          'longitude': double.parse(temp[0]),
+          'latitude': double.parse(temp[1])
+        });
+      }
+    });
+
+    this.add(polyArr);
   }
 
   AMapController? _mapController;
@@ -52,14 +86,21 @@ class MapLogic extends GetxController {
     this.getApprovalNumber();
   }
 
+  onLocationChanged(AMapLocation? location) {
+    if (location == null) {
+      return;
+    }
+    print('_onLocationChanged ${location.toJson()}');
+  }
+
   /// 获取审图号
   void getApprovalNumber() async {
     //普通地图审图号
     String? mapContentApprovalNumber =
-    await _mapController?.getMapContentApprovalNumber();
+        await _mapController?.getMapContentApprovalNumber();
     //卫星地图审图号
     String? satelliteImageApprovalNumber =
-    await _mapController?.getSatelliteImageApprovalNumber();
+        await _mapController?.getSatelliteImageApprovalNumber();
 
     if (null != mapContentApprovalNumber) {
       approvalNumberWidget.add(Text(mapContentApprovalNumber));
@@ -72,22 +113,16 @@ class MapLogic extends GetxController {
     // print('地图审图号（卫星地图): $satelliteImageApprovalNumber');
   }
 
-
   /// 创建点
   List<LatLng> createPoints(List res) {
     final List<LatLng> points = <LatLng>[];
     final int polylineCount = state.polyLines.length;
     final double offset = polylineCount * -(0.01);
-    if(res.length > 0){
+    if (res.length > 0) {
       res.forEach((element) {
         points.add(LatLng(element['latitude'] + offset, element['longitude']));
       });
     }
-    points.add(LatLng(39.938698, 116.275177));
-    points.add(LatLng(39.966069 + offset, 116.289253));
-    points.add(LatLng(39.944226 + offset, 116.306076));
-    points.add(LatLng(39.966069 + offset, 116.322899));
-    points.add(LatLng(39.938698 + offset, 116.336975));
 
     return points;
   }
@@ -95,11 +130,12 @@ class MapLogic extends GetxController {
   /// 渲染点
   void add(List res) {
     Polyline polyline = Polyline(
-        color: Colors.green,
-        width: 10,
+        width: 20,
+        customTexture:
+            BitmapDescriptor.fromIconPath('asset/images/texture_green.png'),
+        joinType: JoinType.round,
         points: this.createPoints(res),
-        onTap: this.onPolylineTapped
-    );
+        onTap: this.onPolylineTapped);
     state.polyLines[polyline.id] = polyline;
     update();
   }
@@ -117,7 +153,7 @@ class MapLogic extends GetxController {
       print("定位权限申请通过");
     } else {
       print("定位权限申请不通过");
-      Get.defaultDialog(title: '定位权限申请不通过',middleText:'无法获取定位，任何人将无法看到您的位置！');
+      Get.defaultDialog(title: '定位权限申请不通过', middleText: '无法获取定位，任何人将无法看到您的位置！');
     }
   }
 
@@ -140,14 +176,14 @@ class MapLogic extends GetxController {
     }
   }
 
-
   /// 高德地图导航
-  Future<bool> gotoAMap() async{
-    var url = 'androidamap://navi?sourceApplication=amap&lat=${state.longitude}&lon=${state.latitude}&dev=0&style=2';
+  Future<bool> gotoAMap() async {
+    var url =
+        'androidamap://navi?sourceApplication=amap&lat=${state.longitude}&lon=${state.latitude}&dev=0&style=2';
 
     var res = await gotoMap(url: url);
-    if(!res){
-      Get.defaultDialog(title: '未安装高德地图',middleText:'无法跳转到高德地图！');
+    if (!res) {
+      Get.defaultDialog(title: '未安装高德地图', middleText: '无法跳转到高德地图！');
       return false;
     }
     return true;
@@ -155,22 +191,22 @@ class MapLogic extends GetxController {
 
   /// 百度地图导航
   Future<bool> gotoBMap() async {
-    var bmapLocation = amapLocation2Bmap(state.latitude,state.longitude);
-    var url ='baidumap://map/direction?destination=${bmapLocation[0]},${bmapLocation[1]}&coord_type=gcj02&mode=driving';
+    var bmapLocation = amapLocation2Bmap(state.latitude, state.longitude);
+    var url =
+        'baidumap://map/direction?destination=${bmapLocation[0]},${bmapLocation[1]}&coord_type=gcj02&mode=driving';
 
     var res = await gotoMap(url: url);
-    if(!res){
-      Get.defaultDialog(title: '未安装百度地图',middleText:'无法跳转到百度地图！');
+    if (!res) {
+      Get.defaultDialog(title: '未安装百度地图', middleText: '无法跳转到百度地图！');
       return false;
     }
     return true;
   }
 
-
   Future<bool> gotoMap({String url = ''}) async {
     bool canLaunchUrl = await isMapInstall(url);
 
-    if (!canLaunchUrl)  return false;
+    if (!canLaunchUrl) return false;
 
     await launch(url);
 
@@ -183,17 +219,16 @@ class MapLogic extends GetxController {
   }
 
   ///GPS坐标转百度地图坐标（传入经度、纬度）
-  amapLocation2Bmap(latitude,longitude){
-      var X_PI = pi * 3000.0 / 180.0;
-      var x = double.parse(longitude);
-      var y = double.parse(latitude);
-      var z = sqrt(x * x + y * y) + 0.00002 * sin(y * X_PI);
-      var theta = atan2(y, x) + 0.000003 * cos(x * X_PI);
-      var bdLng = z * cos(theta) + 0.0065;
-      var bdLat = z * sin(theta) + 0.006;
-      return [bdLng,bdLat];
+  amapLocation2Bmap(latitude, longitude) {
+    var X_PI = pi * 3000.0 / 180.0;
+    var x = double.parse(longitude);
+    var y = double.parse(latitude);
+    var z = sqrt(x * x + y * y) + 0.00002 * sin(y * X_PI);
+    var theta = atan2(y, x) + 0.000003 * cos(x * X_PI);
+    var bdLng = z * cos(theta) + 0.0065;
+    var bdLat = z * sin(theta) + 0.006;
+    return [bdLng, bdLat];
   }
-
 
   // function gps_bgps(gg_lng, gg_lat) {
   //   var X_PI = Math.PI * 3000.0 / 180.0;
@@ -316,16 +351,15 @@ class MapLogic extends GetxController {
 //   }
 // }
 //
-// @override
-// void dispose() {
-//   super.dispose();
-//
-//   ///移除定位监听
-//   if (null != _locationListener) {
-//     _locationListener?.cancel();
-//   }
-//
-//   ///销毁定位
-//   _locationPlugin.destroy();
-// }
+  @override
+  void dispose() {
+    super.dispose();
+
+    ///销毁控制器
+    if (null != _mapController) {
+      _mapController?.clearDisk();
+    }
+
+    ///销毁定位
+  }
 }

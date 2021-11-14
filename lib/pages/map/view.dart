@@ -30,15 +30,15 @@ class MapPage extends StatelessWidget {
                       /// 是否显示底层文字
                       labelsEnabled: true,
                       onMapCreated: logic.onMapCreated,
+                      onLocationChanged: logic.onLocationChanged,
                       // 定位小蓝点配置
                       myLocationStyleOptions: MyLocationStyleOptions(true),
                       // 是否指南针
                       compassEnabled: true,
                       /// 绘制折线
-                      // polylines: Set<Polyline>.of(state.polyLines.values));
+                      polylines: Set<Polyline>.of(state.polyLines.values));
                       ///绘制点标记
-                      markers: Set<Marker>.of(state.markers.values));
-
+                      // markers: Set<Marker>.of(state.markers.values));
                 },
               ),
             ),

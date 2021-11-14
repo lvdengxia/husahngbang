@@ -130,8 +130,12 @@ class HomeLogic extends GetxController {
 
   /// 发送定位给服务端记录
   void sendLocation() async {
+    ///发送之前本地存一份
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('myLocation'); //删除再更新 避免缓存
+    prefs.setString('myLocation',state.locationResult['longitude'].toString() +','+ state.locationResult['latitude'].toString());
      await ApiService.postDriverLocation(
-        state.locationResult!['longitude'], state.locationResult!['latitude']);
+        state.locationResult['longitude'], state.locationResult['latitude']);
   }
 
   @override

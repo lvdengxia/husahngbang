@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hushangbang/pages/deliver/view.dart';
 import 'package:hushangbang/pages/detail/view.dart';
 import 'package:hushangbang/pages/find_pwd/view.dart';
 import 'package:hushangbang/pages/history/view.dart';
@@ -16,4 +17,5 @@ List<GetPage> routes = [
     GetPage(name: '/detail', page: () => DetailPage()),
     GetPage(name: '/loaded', page: () => LoadedPage()),
     GetPage(name: '/history', page: () => HistoryPage()),
+    GetPage(name: '/deliver', page: () => DeliverPage()),
 ];

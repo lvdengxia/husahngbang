@@ -69,12 +69,15 @@ class TaskCardLogic extends GetxController {
 
   /// 确认送达
   onFinished(orderSn) async {
-    var res = await ApiService.receiveOrder(orderSn, 4);
 
-    TodoLogic logic = Get.put(TodoLogic());
-    await logic.refreshToDayData();
+    Get.toNamed('/deliver', arguments: orderSn.toString());
 
-    Get.defaultDialog(title: '提示', middleText: res['msg']);
+    // var res = await ApiService.receiveOrder(orderSn, 4);
+    //
+    // TodoLogic logic = Get.put(TodoLogic());
+    // await logic.refreshToDayData();
+    //
+    // Get.defaultDialog(title: '提示', middleText: res['msg']);
   }
 
   /// 跳转地图页

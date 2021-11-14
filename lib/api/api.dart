@@ -105,6 +105,16 @@ class ApiService {
     return json.decode(response.data.toString());
   }
 
+  /// 路径规划
+  static Future getPathByOrderSn(orderSn,location) async {
+    Response response = await Global.getInstance().dio.get(
+        '/Order/getOrderRoute',
+        queryParameters: {'order_sn': orderSn, 'location': location});
+
+    return json.decode(response.data.toString());
+  }
+
+
   /// 文件上传
   static Future uploadImage(file) async {
     FormData formData = FormData.fromMap(

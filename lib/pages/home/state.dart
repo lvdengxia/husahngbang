@@ -21,7 +21,7 @@ class HomeState {
   AMapFlutterLocation locationPlugin = new AMapFlutterLocation();
 
   /// 返回结果 (经纬度信息)
-  Map<String, Object>? locationResult;
+  late Map<String, Object> locationResult;
 
   AMapLocationOption locationOption = new AMapLocationOption();
 
