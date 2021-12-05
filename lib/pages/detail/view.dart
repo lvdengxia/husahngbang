@@ -48,6 +48,35 @@ class DetailPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Text('仓库负责人 ：', style: TextStyle(fontSize: padding * 1.5),),
+                Container(
+                  child: Row(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          await logic.goCallPage(state.ckdlMobile);
+                        },
+                        icon: Icon(Icons.phone_forwarded),
+                        label: GetBuilder<DetailLogic>(
+                          builder: (logic) {
+                            return Text(state.ckdlName,
+                              style: TextStyle(fontSize: padding * 1.5,
+                                  fontWeight: FontWeight.w600),
+                            );
+                          },
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Theme.of(context).primaryColor,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Text('司机 ：'),
                 GetBuilder<DetailLogic>(
                   builder: (logic) {
@@ -177,7 +206,7 @@ class DetailPage extends StatelessWidget {
             ),
             Divider(color: Colors.black45,),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: padding * 2),
+              padding: EdgeInsets.symmetric(horizontal: padding * 1.5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -185,7 +214,7 @@ class DetailPage extends StatelessWidget {
                       flex: 3,
                       child: Text(
                         '备注：',
-                        style: TextStyle(fontSize: padding * 2.1),
+                        style: TextStyle(fontSize: padding * 2),
                       )),
                   Expanded(
                       flex: 8,
@@ -202,11 +231,14 @@ class DetailPage extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: padding * 2),
-              child: Table(
-                  border: new TableBorder.all(
-                      width: 1.0, color: Colors.black26),
-                  children: logic.getTableRowList()
-              ),
+              child: GetBuilder<DetailLogic>(
+                  builder: (logic) {
+                    return state.isLoading ? Table(
+                        border: new TableBorder.all(
+                            width: 1.0, color: Colors.black26),
+                        children: state.tableRowList
+                    ) : Container();
+                  }),
             )
           ],
         ),

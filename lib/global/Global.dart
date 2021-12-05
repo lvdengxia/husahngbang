@@ -44,17 +44,26 @@ class Global {
       },
       onResponse: (response, handler)  async {
         if(response.statusCode == 401){
+          Get.defaultDialog(title: '提示', middleText: '账号异常，请重新登录！');
+
+          /// 直接退出吧，自动登录不好使。
+          SharedPreferences prefs =
+          await SharedPreferences.getInstance();
+          prefs.remove('token'); //删除指定键
+          prefs.clear(); //清空键值对
+          Get.offAllNamed('/login');
+
           /// 服务端有bug 自动登录
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          String account = prefs.getString('account') ?? '';
-          String pwd = prefs.getString('pwd') ?? '';
-          var login = await ApiService.sendLoginData(account,pwd);
-          if(login['code'].toString() == '200'){
-            prefs.remove('token'); //删除再更新 避免缓存
-            prefs.setString('token',login['data']['token']);
-          }else{
-            Get.defaultDialog(title: '提示', middleText: '账号异常，请重新登录！');
-          }
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // String account = prefs.getString('account') ?? '';
+          // String pwd = prefs.getString('pwd') ?? '';
+          // var login = await ApiService.sendLoginData(account,pwd);
+          // if(login['code'].toString() == '200'){
+          //   prefs.remove('token'); //删除再更新 避免缓存
+          //   prefs.setString('token',login['data']['token']);
+          // }else{
+          //   Get.defaultDialog(title: '提示', middleText: '账号异常，请重新登录！');
+          // }
         }
         return handler.next(response);
       },

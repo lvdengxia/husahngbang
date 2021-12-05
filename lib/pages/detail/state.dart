@@ -5,6 +5,7 @@ class DetailState {
   late bool isLoading;
   late List<TableRow> tableRowList;
 
+
   /// 订单号
   late String orderSn;
 
@@ -42,9 +43,16 @@ class DetailState {
   /// 司机手机号
   late String  driveMobile;
 
+
+  /// 物流负责人姓名
+  late String  ckdlName;
+
+  /// 物流负责人手机号
+  late String  ckdlMobile;
+
   DetailState() {
     ///Initialize variables
-    isLoading = true;
+    isLoading = false;
     tableRowList = [];
     orderSn = '';
     name = '';
@@ -59,5 +67,8 @@ class DetailState {
     distributionStatus = '';
     driveName = '';
     driveMobile = '';
+
+    ckdlName = '';
+    ckdlMobile = '';
   }
 }

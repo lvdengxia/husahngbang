@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hushangbang/api/api.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'state.dart';
 
@@ -12,10 +16,19 @@ class DetailLogic extends GetxController {
     // TODO: implement onInit
     super.onInit();
     var res = await getOrderDetail(Get.arguments);
-    if(res['code'] == 200) {
+
+    // /// 模拟数据
+    // var res;
+    // await rootBundle.loadString('asset/OrderDetail.json').then((value) {
+    //   res = json.decode(value.toString());
+    // });
+
+    if(res['code'].toString() == '200') {
       /// 组装商品数据
       if(res['data']['storey_amount_details'].length != 0){
         state.tableRowList = tableRow(res['data']['storey_amount_details']);
+        state.isLoading = true;
+        update();
       }
 
       state.orderSn = res['data']['order_sn'] ?? '';
@@ -49,6 +62,9 @@ class DetailLogic extends GetxController {
 
       state.driveName = res['data']['order_freight']['drive_name'] ?? '';
       state.driveMobile = res['data']['order_freight']['drive_mobile'] ?? '';
+
+      state.ckdlName = res['data']['order_freight']['ckdl_info']['name'] ?? '';
+      state.ckdlMobile = res['data']['order_freight']['ckdl_info']['tel'] ?? '';
 
       update();
     }
@@ -117,9 +133,8 @@ class DetailLogic extends GetxController {
     return await ApiService.getOrderDetail(orderSn: orderSn);
   }
 
-
-  /// 获取表格列表
-  getTableRowList(){
-    return state.tableRowList;
+  /// 点击跳转拨打电话页
+  goCallPage(mobile) {
+    launch("tel://" + mobile);
   }
 }

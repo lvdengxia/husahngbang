@@ -48,36 +48,41 @@
     "storey": 9,
     "stair_type": "3地下车库-",
     "order_freight": {
-    "id": 1,
-    "order_sn": "osn825599851577292",
-    "type": 2,
-    "code": "",
-    "logistics_company": "",
-    "freight_sn": "",
-    "created_time": "2021-08-29 10:06:20",
-    "updated_time": "2021-08-29 10:06:20",
-    "deleted_time": null,
-    "is_deleted": 0,
-    "distribution_status": 1,
-    "distribution_img": "",
-    "driver_id": 4,
-    "drive_name": "",
-    "drive_mobile": ""
-  },
-  "order_buyer": {
-    "id": 61,
-    "order_sn": "osn825599851577292",
-    "note": "",
-    "name": "宋帅帅",
-    "mobile": "19966533746",
-    "province": "上海市",
-    "city": "上海市",
-    "district": "宝山区",
-    "address": "共富新村",
-    "created_time": "2021-08-25 10:53:05",
-    "updated_time": "2021-08-25 10:53:05",
-    "deleted_time": null,
-    "is_deleted": 0
+      "id": 1,
+      "order_sn": "osn825599851577292",
+      "type": 2,
+      "code": "",
+      "logistics_company": "",
+      "freight_sn": "",
+      "created_time": "2021-08-29 10:06:20",
+      "updated_time": "2021-08-29 10:06:20",
+      "deleted_time": null,
+      "is_deleted": 0,
+      "distribution_status": 1,
+      "distribution_img": "",
+      "driver_id": 4,
+      "drive_name": "",
+      "drive_mobile": "",
+      "ckdl_info": {
+        "id":0,
+        "name":"aa",
+        "tel":"aa"
+      }
+    },
+    "order_buyer": {
+      "id": 61,
+      "order_sn": "osn825599851577292",
+      "note": "",
+      "name": "宋帅帅",
+      "mobile": "19966533746",
+      "province": "上海市",
+      "city": "上海市",
+      "district": "宝山区",
+      "address": "共富新村",
+      "created_time": "2021-08-25 10:53:05",
+      "updated_time": "2021-08-25 10:53:05",
+      "deleted_time": null,
+      "is_deleted": 0
+    }
   }
-}
 }

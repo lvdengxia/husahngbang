@@ -27,8 +27,8 @@ class MapLogic extends GetxController {
     // await this.getDriverAndDraw();/// 获取轨迹 && 画线
     // draw();  /// 画点标记
 
-    /// 获取路径规划 && 画线
-    await getPathAndDraw();
+    // /// 获取路径规划 && 画线
+    // await getPathAndDraw();
 
     update();
   }
@@ -81,16 +81,22 @@ class MapLogic extends GetxController {
 
   List<Widget> approvalNumberWidget = [];
 
-  void onMapCreated(AMapController controller) {
+  void onMapCreated(AMapController controller) async {
     _mapController = controller;
     this.getApprovalNumber();
+    await this.getPathAndDraw();
   }
 
-  onLocationChanged(AMapLocation? location) {
+  onLocationChanged(AMapLocation? location) async{
     if (location == null) {
       return;
     }
-    print('_onLocationChanged ${location.toJson()}');
+    /// 这样还是不行...
+    // state.latitude = location.latLng.latitude.toString();
+    // state.longitude = location.latLng.longitude.toString();
+    // update();
+
+    // print('_onLocationChanged ${location.toJson()}');
   }
 
   /// 获取审图号
