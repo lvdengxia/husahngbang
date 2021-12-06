@@ -27,6 +27,10 @@ class MapPage extends StatelessWidget {
               child: GetBuilder<MapLogic>(
                 builder: (logic) {
                   return AMapWidget(
+                      initialCameraPosition: CameraPosition(
+                        target: state.centerPointer,
+                        zoom: 10.0,
+                      ),
                       /// 是否显示底层文字
                       labelsEnabled: true,
                       onMapCreated: logic.onMapCreated,

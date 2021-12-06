@@ -71,8 +71,12 @@ class MapLogic extends GetxController {
           'longitude': double.parse(temp[0]),
           'latitude': double.parse(temp[1])
         });
+        ///设置新的点集合
+        state.pointList.add(LatLng(double.parse(temp[1]),double.parse(temp[0])));
       }
     });
+
+    update();
 
     this.add(polyArr);
   }
@@ -85,6 +89,32 @@ class MapLogic extends GetxController {
     _mapController = controller;
     this.getApprovalNumber();
     await this.getPathAndDraw();
+
+    if (state.pointList != [] && state.pointList.length > 0) {
+      LatLngBounds bounds = getLatLngBounds(state.pointList);
+      ///通过[CameraUpdate]对象设置新的中心点
+      _mapController!.moveCamera(CameraUpdate.newLatLngBounds(bounds,50));
+    }
+
+    update();
+  }
+
+  /// 计算能容纳的最大矩形
+  LatLngBounds getLatLngBounds(List<LatLng> pointList) {
+    List latList = [];
+    List lngList = [];
+    for (var i = 0; i < pointList.length; i++) {
+      latList.add(pointList[i].latitude);
+      lngList.add(pointList[i].longitude);
+    }
+
+    double minLat = latList.reduce((value, element) => value < element ? value : element);
+    double maxLat = latList.reduce((value, element) => value > element ? value : element);
+
+    double minLng = lngList.reduce((value, element) => value < element ? value : element);
+    double maxLng = lngList.reduce((value, element) => value > element ? value : element);
+
+    return LatLngBounds(southwest: LatLng(minLat,minLng), northeast: LatLng(maxLat,maxLng));
   }
 
   onLocationChanged(AMapLocation? location) async{

@@ -89,7 +89,7 @@ class TaskCard extends StatelessWidget {
                         Text(
                           item['name'],
                           style: TextStyle(
-                              fontSize: padding * 2.2, fontWeight: FontWeight.w500),
+                              fontSize: padding * 2.0, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -103,9 +103,10 @@ class TaskCard extends StatelessWidget {
                     isShowMapWidget ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('地址 ：'),
+                        Text('地址 ：',style: TextStyle(
+                            fontSize: padding * 2.0, fontWeight: FontWeight.w500),),
                         SizedBox(
-                          width: 30,
+                          width: 10,
                         ),
                         Icon(
                           Icons.place_outlined,
@@ -120,6 +121,8 @@ class TaskCard extends StatelessWidget {
                               child: Text(
                           item['province']+item['city']+item['district']+item['address'],
                           overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: padding * 2.0, fontWeight: FontWeight.w500),
                         ),
                             )),
                         Icon(Icons.keyboard_arrow_right,color: Colors.red,)
