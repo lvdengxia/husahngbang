@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hushangbang/api/api.dart';
 import 'state.dart';
-import 'dart:convert' show json;
+// import 'dart:convert' show json;
 
 
 class TodoLogic extends GetxController {
@@ -25,8 +25,7 @@ class TodoLogic extends GetxController {
                   data['data']['list'][i]['distribution_status'] == 2 ||
               data['data']['list'][i]['status'] == 202 &&
                   data['data']['list'][i]['distribution_status'] == 3 ||
-              data['data']['list'][i]['status'] == 202 &&
-                  data['data']['list'][i]['distribution_status'] == 4) {
+              data['data']['list'][i]['status'] == 202) {
             arr.add(data['data']['list'][i]);
           }
         }

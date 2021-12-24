@@ -91,9 +91,32 @@ class PersonPage extends StatelessWidget {
                             top: 40.0,
                             right: 30.0,
                           ),
-                          child: new CircleAvatar(
-                            radius: 35.0,
-                            backgroundImage: new ExactAssetImage('asset/images/default.png'),
+                          child: GetBuilder<PersonLogic>(
+                            builder: (logic) {
+                              if (state.avatar == '' ||
+                                  !state.avatar.contains('http')) {
+                                return GestureDetector(
+                                  child: new CircleAvatar(
+                                    radius: 35.0,
+                                    backgroundImage: new ExactAssetImage(
+                                        'asset/images/default.png'),
+                                  ),
+                                  onTap: () {
+                                    Get.toNamed('/update_avatar');
+                                  },
+                                );
+                              } else {
+                                return GestureDetector(
+                                  child: new CircleAvatar(
+                                    radius: 35.0,
+                                    backgroundImage: NetworkImage(state.avatar,scale: 0.9),
+                                  ),
+                                  onTap: () {
+                                    Get.toNamed('/update_avatar');
+                                  },
+                                );
+                              }
+                            },
                           ),
                         ),
                       )
@@ -121,7 +144,8 @@ class PersonPage extends StatelessWidget {
                         icon: Icons.face,
                         title: '体验新版本',
                         onPressed: () {
-                          Get.defaultDialog(title: '提示',middleText:'当前已经是最新版本了!');
+                          Get.defaultDialog(
+                              title: '提示', middleText: '当前已经是最新版本了!');
                         },
                       ),
                       // new MenuItem(

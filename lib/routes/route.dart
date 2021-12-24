@@ -7,6 +7,7 @@ import 'package:hushangbang/pages/home/view.dart';
 import 'package:hushangbang/pages/loaded/view.dart';
 import 'package:hushangbang/pages/login/view.dart';
 import 'package:hushangbang/pages/map/view.dart';
+import 'package:hushangbang/pages/person/update_avatar_view.dart';
 
 
 List<GetPage> routes = [
@@ -18,4 +19,5 @@ List<GetPage> routes = [
     GetPage(name: '/loaded', page: () => LoadedPage()),
     GetPage(name: '/history', page: () => HistoryPage()),
     GetPage(name: '/deliver', page: () => DeliverPage()),
+    GetPage(name: '/update_avatar', page: () => UpdateAvatarPage()),
 ];

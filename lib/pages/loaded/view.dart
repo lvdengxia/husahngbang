@@ -24,51 +24,23 @@ class LoadedPage extends StatelessWidget {
         color: Color(0xfff4f5f5), //背景色
         padding: EdgeInsets.all(padding * 2),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [Expanded(child: Text('请按照示例图上传照片'))],
-            ),
+            Row(children: [Expanded(child: Text('请上传现场照片：' ,style: TextStyle(fontWeight: FontWeight.w600),))],),
+
             SizedBox(height: padding),
+
             GetBuilder<LoadedLogic>(
               builder: (logic) {
-                return state.imgUrl == ''
-                    ? GestureDetector(
-                        onTap: logic.pickImage,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xfff4f5f5),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              border: Border.all(color: Colors.black26),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0.0, 1.0),
-                                    blurRadius: 1.0,
-                                    spreadRadius: 1.0),
-                              ]),
-                          width: double.infinity,
-                          height: padding * 40,
-                          child: Container(
-                            padding: EdgeInsets.only(top: padding * 17),
-                            child: Column(
-                              children: [
-                                Icon(Icons.photo_camera),
-                                Text('点击上传图片')
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(
-                        width: double.infinity,
-                        height: padding * 40,
-                        child: Image(
-                          image: NetworkImage(state.imgUrl),
-                          fit: BoxFit.cover
-                        ));
+                return Wrap(
+                  direction: Axis.horizontal,
+                  alignment: WrapAlignment.spaceEvenly,
+                  spacing: padding * 2,
+                  children: logic.imageList(padding),
+                );
               },
             ),
+
             Padding(
               padding: const EdgeInsets.only(top: 25),
               child: ConstrainedBox(

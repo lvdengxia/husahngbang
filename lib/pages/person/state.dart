@@ -10,7 +10,10 @@ class PersonState {
 
   String credentialsFront = '';
   String credentialsContrary = '';
+  String avatar = '';
 
+  List<String> imgUrl = [];
+  int maxSize = 1;
   PersonState() {
     ///Initialize variables
   }

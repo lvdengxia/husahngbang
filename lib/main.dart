@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hushangbang/routes/route.dart';
 import 'package:get/get.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 
 class App extends StatelessWidget {
@@ -15,6 +16,7 @@ class App extends StatelessWidget {
         primaryColor: Colors.deepOrangeAccent,
       ),
       getPages: routes,
+      builder: EasyLoading.init(),
     );
   }
 }

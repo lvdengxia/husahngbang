@@ -38,6 +38,9 @@ dependencies:
   flutter_easyrefresh:
   url_launcher:
   image_picker:
+  flutter_luban:
+  photo_view:
+  flutter_easyloading:
 #  weui:
 #  amap_base:
 

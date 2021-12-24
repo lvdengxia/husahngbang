@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:hushangbang/global/Global.dart';
-import 'package:hushangbang/models/Login.dart';
 import 'dart:convert' show json;
 
 import 'package:hushangbang/models/Upload.dart';
@@ -118,10 +117,40 @@ class ApiService {
   /// 文件上传
   static Future uploadImage(file) async {
     FormData formData = FormData.fromMap(
-        {'fileUpload': await MultipartFile.fromFile(file.path)});
+        {'fileUpload': await MultipartFile.fromFile(file)});
     Response response =
         await Global.getInstance().dio.post('/Index/uplode', data: formData);
 
     return Upload.fromJson(response.data);
+  }
+
+  /// 文件删除
+  static Future deleteImage(url) async {
+    Response response = await Global.getInstance().dio
+        .get('/Order/getOrderRoute', queryParameters: {'img': url});
+    return json.decode(response.data.toString());
+  }
+
+  /// 上传现场照片列表
+  static Future upOrderImgType(
+      String orderSn, int type, List<String> img) async {
+    Map data = {'order_sn': orderSn, 'type': type, 'img': img};
+
+    Response response = await Global.getInstance()
+        .dio
+        .post('/Order/upOrderImgType', data: data);
+
+    return json.decode(response.data.toString());
+  }
+
+  /// 上传现场照片列表
+  static Future upHeaderImg(String img) async {
+    Map data = {'img': img};
+
+    Response response = await Global.getInstance()
+        .dio
+        .post('/User/upHeaderImg', data: data);
+
+    return json.decode(response.data.toString());
   }
 }
