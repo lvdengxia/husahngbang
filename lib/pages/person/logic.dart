@@ -111,9 +111,9 @@ class PersonLogic extends GetxController {
     }
   }
 
-  deleteImage(url) async {
+  deleteImage(url) {
     state.imgUrl.remove(url);
-    await ApiService.deleteImage(url);
+    ApiService.deleteImage(url);
     update();
   }
 

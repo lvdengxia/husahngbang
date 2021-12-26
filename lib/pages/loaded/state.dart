@@ -10,7 +10,7 @@ class LoadedState {
   LoadedState() {
     ///Initialize variables
     orderSn = '';
-    maxSize = 2;
+    maxSize = 4;
     uploading = false;
   }
 }

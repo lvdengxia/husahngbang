@@ -127,7 +127,7 @@ class ApiService {
   /// 文件删除
   static Future deleteImage(url) async {
     Response response = await Global.getInstance().dio
-        .get('/Order/getOrderRoute', queryParameters: {'img': url});
+        .get('/Index/delupload', queryParameters: {'img': url});
     return json.decode(response.data.toString());
   }
 

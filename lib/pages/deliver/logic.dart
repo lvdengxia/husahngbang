@@ -97,9 +97,9 @@ class DeliverLogic extends GetxController {
     }
   }
 
-  deleteImage1(url) async{
+  deleteImage1(url) {
     state.imgUrl1.remove(url);
-    await ApiService.deleteImage(url);
+    ApiService.deleteImage(url);
     update();
   }
 
@@ -108,11 +108,12 @@ class DeliverLogic extends GetxController {
     for (var i = 0; i < state.imgUrl1.length; i++) {
       String remoteUrl  = state.imgUrl1[i];
       list.add(Stack(
+        overflow: Overflow.visible,
         children: [
           Container(
-            width: padding * 10,
-            height: padding * 10,
-            padding: EdgeInsets.all(padding),
+            width: padding * 12,
+            height: padding * 12,
+            padding: EdgeInsets.all(padding / 2),
             margin: EdgeInsets.only(bottom: padding),
             decoration: BoxDecoration(
                 color: Color(0xfff4f5f5),
@@ -138,9 +139,10 @@ class DeliverLogic extends GetxController {
             ),
           ),
           Positioned(
-            right: 0,
+            right: - padding / 1.5,
+            top: -padding / 1.5,
             child: GestureDetector(
-              child: Icon(Icons.delete),
+              child: Icon(Icons.close),
               onTap: (){
                 deleteImage1(remoteUrl);
               },
@@ -154,8 +156,8 @@ class DeliverLogic extends GetxController {
       list.add(GestureDetector(
         onTap: selectImageOrigin1,
         child: Container(
-          width: padding * 10,
-          height: padding * 10,
+          width: padding * 12,
+          height: padding * 12,
           margin: EdgeInsets.only(bottom: padding),
           decoration: BoxDecoration(
               color: Color(0xfff4f5f5),
@@ -254,9 +256,9 @@ class DeliverLogic extends GetxController {
     }
   }
 
-  deleteImage2(url) async {
+  deleteImage2(url) {
     state.imgUrl2.remove(url);
-    await ApiService.deleteImage(url);
+    ApiService.deleteImage(url);
     update();
   }
 
@@ -265,11 +267,12 @@ class DeliverLogic extends GetxController {
     for (var i = 0; i < state.imgUrl2.length; i++) {
       String remoteUrl = state.imgUrl2[i];
       list.add(Stack(
+        overflow: Overflow.visible,
         children: [
           Container(
-              width: padding * 10,
-              height: padding * 10,
-              padding: EdgeInsets.all(padding),
+              width: padding * 12,
+              height: padding * 12,
+              padding: EdgeInsets.all(padding / 2),
               margin: EdgeInsets.only(bottom: padding),
               decoration: BoxDecoration(
                   color: Color(0xfff4f5f5),
@@ -295,9 +298,10 @@ class DeliverLogic extends GetxController {
               )
           ),
           Positioned(
-            right: 0,
+            right: - padding / 1.5,
+            top: -padding / 1.5,
             child: GestureDetector(
-              child: Icon(Icons.delete),
+              child: Icon(Icons.close),
               onTap: (){
                 deleteImage2(remoteUrl);
               },
@@ -311,8 +315,8 @@ class DeliverLogic extends GetxController {
       list.add(GestureDetector(
         onTap: selectImageOrigin2,
         child: Container(
-          width: padding * 10,
-          height: padding * 10,
+          width: padding * 12,
+          height: padding * 12,
           margin: EdgeInsets.only(bottom: padding),
           decoration: BoxDecoration(
               color: Color(0xfff4f5f5),

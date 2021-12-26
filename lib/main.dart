@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-//      debugShowCheckedModeBanner: false,
+     debugShowCheckedModeBanner: false,
       title: '沪上帮',
       theme: ThemeData(
         primaryColor: Colors.deepOrangeAccent,

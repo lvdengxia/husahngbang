@@ -24,8 +24,7 @@ class TodoLogic extends GetxController {
           if (data['data']['list'][i]['status'] == 202 &&
                   data['data']['list'][i]['distribution_status'] == 2 ||
               data['data']['list'][i]['status'] == 202 &&
-                  data['data']['list'][i]['distribution_status'] == 3 ||
-              data['data']['list'][i]['status'] == 202) {
+                  data['data']['list'][i]['distribution_status'] == 3) {
             arr.add(data['data']['list'][i]);
           }
         }

@@ -34,7 +34,7 @@ class LoadedPage extends StatelessWidget {
               builder: (logic) {
                 return Wrap(
                   direction: Axis.horizontal,
-                  alignment: WrapAlignment.spaceEvenly,
+                  alignment: WrapAlignment.start,
                   spacing: padding * 2,
                   children: logic.imageList(padding),
                 );

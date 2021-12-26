@@ -34,6 +34,7 @@ class UpdateAvatarPage extends StatelessWidget {
                 for (var i = 0; i < state.imgUrl.length; i++) {
                   String remoteUrl  = state.imgUrl[i];
                   list.add(Stack(
+                    overflow: Overflow.visible,
                     children: [
                       Container(
                         width: 180,
@@ -64,9 +65,10 @@ class UpdateAvatarPage extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        right: 0,
+                        right: -7,
+                        top: -10,
                         child: GestureDetector(
-                          child: Icon(Icons.delete),
+                          child: Icon(Icons.close),
                           onTap: (){
                             logic.deleteImage(remoteUrl);
                           },
@@ -103,7 +105,7 @@ class UpdateAvatarPage extends StatelessWidget {
                 }
                 return Wrap(
                   direction: Axis.horizontal,
-                  alignment: WrapAlignment.spaceEvenly,
+                  alignment: WrapAlignment.start,
                   spacing: 10 * 2,
                   children: list,
                 );

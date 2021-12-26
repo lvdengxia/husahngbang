@@ -102,11 +102,12 @@ class LoadedLogic extends GetxController {
     for (var i = 0; i < state.imgUrl.length; i++) {
       String remoteUrl  = state.imgUrl[i];
       list.add(Stack(
+        overflow: Overflow.visible,
         children: [
           Container(
             width: padding * 10,
             height: padding * 10,
-            padding: EdgeInsets.all(padding),
+            padding: EdgeInsets.all(padding / 2),
             margin: EdgeInsets.only(bottom: padding),
             decoration: BoxDecoration(
                 color: Color(0xfff4f5f5),
@@ -132,9 +133,10 @@ class LoadedLogic extends GetxController {
             ),
           ),
           Positioned(
-            right: 0,
+            right: - padding / 1.5,
+            top: -padding / 1.5,
             child: GestureDetector(
-              child: Icon(Icons.delete),
+              child: Icon(Icons.close),
               onTap: (){
                 deleteImage(remoteUrl);
               },
@@ -173,9 +175,9 @@ class LoadedLogic extends GetxController {
     return list;
   }
 
-  deleteImage(url) async {
+  deleteImage(url) {
     state.imgUrl.remove(url);
-    await ApiService.deleteImage(url);
+    ApiService.deleteImage(url);
     update();
   }
 
